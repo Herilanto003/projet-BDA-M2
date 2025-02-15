@@ -117,7 +117,11 @@ export const login = async (req: Request, res: Response) => {
       return;
     }
 
-    const token = generateToken({ userId: user.id });
+    const token = generateToken({
+      userId: user.id,
+      userEmail: user.email,
+      userName: user.name,
+    });
 
     res.json({
       email: user.email,
