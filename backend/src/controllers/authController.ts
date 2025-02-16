@@ -124,10 +124,12 @@ export const login = async (req: Request, res: Response) => {
     });
 
     res.json({
-      email: user.email,
-      name: user.name,
-      userId: user.id,
-      isAdmin: user.isAdmin,
+      user: {
+        email: user.email,
+        name: user.name,
+        userId: user.id,
+        isAdmin: user.isAdmin,
+      },
       token,
     });
 

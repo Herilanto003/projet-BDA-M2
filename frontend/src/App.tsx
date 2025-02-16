@@ -1,35 +1,64 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import AdminRoutes from "./routes/AdminRoutes";
+import UsersRoutes from "./routes/UsersRoutes";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
+import Home from "./pages/Home";
+import NotFound from "./pages/errors/NotFound";
+import ProtectedRouteAdmin from "./routes/ProtectedRouteAdmin";
+import ProtectedRouteUser from "./routes/ProtectedRouteUser";
+import ProtectedRouteAuth from "./routes/ProtectedRouteAuth";
 
-function App() {
-  const [count, setCount] = useState(0)
-
+export default function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <Router>
+      <Routes>
+        {/* Route pour la page d'accueil */}
+        <Route path="/" element={<Home />} />
 
-export default App
+        {/* Route pour la page de login */}
+        <Route
+          path="/login"
+          element={
+            <ProtectedRouteAuth>
+              <Login />
+            </ProtectedRouteAuth>
+          }
+        />
+
+        {/* Route pour la page de l'inscription */}
+        <Route
+          path="/register"
+          element={
+            <ProtectedRouteAuth>
+              <Register />
+            </ProtectedRouteAuth>
+          }
+        />
+
+        {/* Route pour l'espace admin */}
+        <Route
+          path="/admin/*"
+          element={
+            <ProtectedRouteAdmin>
+              <AdminRoutes />
+            </ProtectedRouteAdmin>
+          }
+        />
+
+        {/* Route pour l'espace utilisateur simple */}
+        <Route
+          path="/user/*"
+          element={
+            <ProtectedRouteUser>
+              <UsersRoutes />
+            </ProtectedRouteUser>
+          }
+        />
+
+        {/* Route pour les pages non trouvées */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </Router>
+  );
+}
