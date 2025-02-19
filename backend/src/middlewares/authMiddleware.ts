@@ -1,8 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken } from "../utils/jwt";
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
 
 export const authenticate = async (
   req: Request,
@@ -12,13 +9,15 @@ export const authenticate = async (
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ message: "Token missing" });
+    res.status(401).json({ message: "Token missing" });
+    return;
   }
 
   const decoded: any = verifyToken(token);
 
   if (!decoded) {
-    return res.status(403).json({ message: "Invalid token" });
+    res.status(403).json({ message: "Invalid token" });
+    return;
   }
 
   console.log(decoded);

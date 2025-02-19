@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { encrypt, decrypt } from "../../utils/cryptoUtilis";
 
 interface AuthState {
   user: any | null;
@@ -6,7 +7,11 @@ interface AuthState {
 }
 
 const initialState: AuthState = {
-  user: JSON.parse(localStorage.getItem("user") || "null"),
+  user: JSON.parse(
+    localStorage.getItem("user")
+      ? decrypt(localStorage.getItem("user")!, "jigsaw")
+      : "null"
+  ),
   token: localStorage.getItem("token") || null,
 };
 
@@ -20,7 +25,10 @@ const authSlice = createSlice({
     ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
-      localStorage.setItem("user", JSON.stringify(action.payload.user));
+      localStorage.setItem(
+        "user",
+        encrypt(JSON.stringify(action.payload.user), "jigsaw")
+      );
       localStorage.setItem("token", action.payload.token);
     },
     logout: (state) => {
